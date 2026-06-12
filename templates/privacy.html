@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy — Spendly{% endblock %}
+
+{% block content %}
+<div class="auth-container" style="margin: 4rem auto; max-width: 800px; text-align: left;">
+    <h1 class="auth-title" style="text-align: center;">Privacy Policy</h1>
+    <p class="auth-subtitle" style="text-align: center; margin-bottom: 3rem;">Last updated: June 12, 2026</p>
+
+    <div class="auth-card">
+        <h2 class="feature-title">1. Data We Collect</h2>
+        <p class="feature-body">
+            We collect information that you provide directly to us, including your name, email address, and the expense data you log within the application. This information is used solely to provide you with the expense tracking service.
+        </p>
+    </div>
+
+    <div class="auth-card">
+        <h2 class="feature-title">2. How We Use Your Data</h2>
+        <p class="feature-body">
+            Your data is used to:
+            <ul>
+                <li>Provide and maintain the service.</li>
+                <li>Generate spending reports and summaries.</li>
+                <li>Improve the functionality of the application.</li>
+                <li>Provide customer support.</li>
+            </ul>
+        </p>
+    </div>
+
+    <div class="auth-card">
+        <h2 class="feature-title">3. Data Storage</h2>
+        <p class="feature-body">
+            We use secure servers to store your data. We implement industry-standard security measures to protect your information from unauthorized access, alteration, or destruction. However, no method of transmission over the internet is 100% secure.
+        </p>
+    </div>
+
+    <div class="auth-card">
+        <h2 class="feature-title">4. Third Party Services</h2>
+        <p class="feature-body">
+            Spendly does not sell or rent your personal data to third parties. We may use third-party infrastructure providers (such as hosting services) to operate the application, but these providers are bound by strict confidentiality agreements.
+        </p>
+    </div>
+
+    <div class="auth-card">
+        <h2 class="feature-title">5. Contact Us</h2>
+        <p class="feature-body">
+            If you have any questions about this Privacy Policy or the way we handle your data, please contact us at support@spendly.example.com.
+        </p>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="{{ url_for('landing') }}" class="btn-ghost">Back to Home</a>
+    </div>
+</div>
+{% endblock %}
