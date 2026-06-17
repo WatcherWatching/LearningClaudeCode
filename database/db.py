@@ -96,3 +96,17 @@ def seed_db():
         conn.commit()
     finally:
         conn.close()
+
+
+def create_user(name: str, email: str, password_hash: str) -> int:
+    """Insert a user row and return the new id. Raises sqlite3.IntegrityError on duplicate email."""
+    conn = get_db()
+    try:
+        cur = conn.execute(
+            "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
+            (name, email, password_hash),
+        )
+        conn.commit()
+        return cur.lastrowid
+    finally:
+        conn.close()
