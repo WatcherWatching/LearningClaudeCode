@@ -2,7 +2,7 @@ import sqlite3
 from datetime import date, timedelta
 from pathlib import Path
 
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # Database file lives at the project root, alongside app.py.
 DB_PATH = Path(__file__).resolve().parent.parent / "spendly.db"
@@ -110,3 +110,26 @@ def create_user(name: str, email: str, password_hash: str) -> int:
         return cur.lastrowid
     finally:
         conn.close()
+
+
+def get_user_by_email(email: str):
+    """Fetch a user record by email. Returns a dict or None if not found."""
+    conn = get_db()
+    try:
+        user = conn.execute(
+            "SELECT id, name, email, password_hash, created_at FROM users WHERE email = ?",
+            (email,)
+        ).fetchone()
+        return dict(user) if user else None
+    finally:
+        conn.close()
+
+
+def verify_password(email: str, password: str):
+    """Verify a user's email and password. Returns user dict (without hash) on success, None on failure."""
+    user = get_user_by_email(email)
+    if user and check_password_hash(user['password_hash'], password):
+        # Remove sensitive hash before returning
+        user.pop('password_hash', None)
+        return user
+    return None
