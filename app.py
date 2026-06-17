@@ -1,11 +1,13 @@
 import sqlite3
 
-from flask import Flask, redirect, render_template, request, url_for
-from werkzeug.security import generate_password_hash
+from flask import Flask, redirect, render_template, request, url_for, session
+from werkzeug.security import generate_password_hash, check_password_hash
 
-from database.db import create_user, get_db, init_db, seed_db
+from database.db import create_user, get_db, init_db, seed_db, get_user_by_email, verify_password
 
 app = Flask(__name__)
+app.secret_key = 'your-secret-key-here'  # In production, use a secure random key
+app.config['SESSION_PERMANENT'] = False
 
 
 # ------------------------------------------------------------------ #
@@ -52,8 +54,30 @@ def register():
     return render_template("register.html")
 
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
+    if request.method == "POST":
+        email = (request.form.get("email") or "").strip().lower()
+        password = request.form.get("password") or ""
+
+        # Input validation
+        if not email:
+            return render_template("login.html", error="Email is required."), 400
+        if not password:
+            return render_template("login.html", error="Password is required."), 400
+
+        # Verify credentials
+        user = verify_password(email, password)
+        if user is None:
+            return render_template("login.html", error="Invalid email or password."), 401
+
+        # Set user in session
+        session['user_id'] = user['id']
+        session['user_name'] = user['name']
+
+        # Redirect to landing page
+        return redirect(url_for("landing"))
+
     return render_template("login.html")
 
 
@@ -73,7 +97,10 @@ def privacy():
 
 @app.route("/logout")
 def logout():
-    return "Logout — coming in Step 3"
+    # Clear the session
+    session.clear()
+    # Redirect to landing page
+    return redirect(url_for("landing"))
 
 
 @app.route("/profile")
